@@ -60,6 +60,15 @@ class CreateProductService {
                     banner: bannerUrl,
                     category: { connect: { id: category_id } },
                 },
+                select: {
+                    id: true,
+                    name: true,
+                    description: true,
+                    price: true,
+                    banner: true,
+                    category_id: true,
+                    created_at: true,
+                },
             });
 
             return product;
