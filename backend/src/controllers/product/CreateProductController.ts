@@ -3,15 +3,17 @@ import { CreateProductService } from '../../services/product/CreateProductServic
 
 class CreateProductController {
     async handle(req: Request, res: Response) {
-        const { name, description, price, category_id } = req.body;
+        const { name, description, price } = req.body;
+        const category_id = req.body.category_id ?? req.body.categoryId;
 
         if (!req.file) {
             return res.status(400).json({ error: 'File is required' });
         }
 
-        console.log("===============================")
-        console.log(req.file);
-        console.log("===============================")
+        if (!category_id) {
+            return res.status(400).json({ error: 'Category id is required' });
+        }
+
         const createProduct = new CreateProductService();
 
         try {
@@ -25,10 +27,10 @@ class CreateProductController {
                 imageName: file.originalname,
             });
 
-            res.status(201).json(product);
+            return res.status(201).json(product);
         } catch (error: any) {
             console.error('Error creating product:', error);
-            res.status(500).json({ error: error.message || 'Internal server error' });
+            return res.status(500).json({ error: error.message || 'Internal server error' });
         }
     }
 }

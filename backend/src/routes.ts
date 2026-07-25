@@ -14,7 +14,7 @@ import { ListCategoryController } from './controllers/category/ListCategoryContr
 import { CreateProductController } from './controllers/product/CreateProductController';
 
 const router = Router();
-const upload = multer();
+const upload = multer(uploadConfig);
 
 // rotas user
 const createUserController = new CreateUserController();

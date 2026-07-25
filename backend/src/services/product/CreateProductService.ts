@@ -1,6 +1,5 @@
 import prismaClient from "../../prisma";
 import cloudinary from "../../config/cloudinary";
-import {Readable} from "stream";
 
 interface CreateProductServiceProps {
     name: string;
@@ -13,9 +12,11 @@ interface CreateProductServiceProps {
 
 class CreateProductService {
     async execute({ name, description, price, category_id, imageBuffer, imageName }: CreateProductServiceProps) {
-        // Implementation for creating a product
+        if (!category_id) {
+            throw new Error('Category id is required');
+        }
 
-        const categoryExists = await prismaClient.category.findFirst({
+        const categoryExists = await prismaClient.category.findUnique({
             where: {
                 id: category_id,
             },
@@ -45,8 +46,7 @@ class CreateProductService {
                     }
                 );
 
-                const bufferStream = Readable.from(imageBuffer);
-                bufferStream.pipe(uploadStream);
+                uploadStream.end(imageBuffer);
             });
 
             console.log(result);
