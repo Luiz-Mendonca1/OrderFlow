@@ -26,7 +26,6 @@ class CreateProductService {
             throw new Error('Category not found');
         }
 
-        // envia para o cloudinary e pega url
         let bannerUrl = '';
 
         try {
@@ -49,16 +48,20 @@ class CreateProductService {
                 uploadStream.end(imageBuffer);
             });
 
-            console.log(result);
             bannerUrl = result?.secure_url || result?.url || '';
+        } catch (error) {
+            console.error('Error uploading image to Cloudinary:', error);
+            throw new Error('Failed to upload image');
+        }
 
+        try {
             const product = await prismaClient.product.create({
                 data: {
                     name,
                     description,
                     price,
                     banner: bannerUrl,
-                    category: { connect: { id: category_id } },
+                    categoryId: category_id,
                 },
                 select: {
                     id: true,
@@ -66,15 +69,15 @@ class CreateProductService {
                     description: true,
                     price: true,
                     banner: true,
-                    category_id: true,
-                    created_at: true,
+                    categoryId: true,
+                    createdAt: true,
                 },
             });
 
             return product;
         } catch (error) {
-            console.error('Error uploading image to Cloudinary:', error);
-            throw new Error('Failed to upload image');
+            console.error('Error creating product in database:', error);
+            throw new Error('Failed to create product');
         }
     }
 
