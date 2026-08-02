@@ -26,7 +26,7 @@ class CreateProductService {
             throw new Error('Category not found');
         }
 
-        let bannerUrl = '';
+         let bannerUrl = '';
 
         try {
             const result = await new Promise<any>((resolve, reject) => {
