@@ -14,6 +14,7 @@ import { ListCategoryController } from './controllers/category/ListCategoryContr
 import { CreateProductController } from './controllers/product/CreateProductController';
 import { createProductSchema } from './schemas/productSchema';
 import { ListProductController } from './controllers/product/ListProductController';
+import { DeleteProductController } from './controllers/product/DeleteProductController';
 
 const router = Router();
 const upload = multer(uploadConfig);
@@ -42,3 +43,6 @@ router.post('/product', isAuthenticated, isAdmin, upload.single('file'), validat
 const listProductController = new ListProductController();
 router.get('/product', isAuthenticated, (req, res) => listProductController.handle(req, res));
 export default router;
+
+const deleteProductController = new DeleteProductController();
+router.delete('/product', isAuthenticated, isAdmin, (req, res) => deleteProductController.handle(req, res));
