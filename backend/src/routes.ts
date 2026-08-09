@@ -42,7 +42,8 @@ router.post('/product', isAuthenticated, isAdmin, upload.single('file'), validat
 
 const listProductController = new ListProductController();
 router.get('/product', isAuthenticated, (req, res) => listProductController.handle(req, res));
-export default router;
 
 const deleteProductController = new DeleteProductController();
 router.delete('/product', isAuthenticated, isAdmin, (req, res) => deleteProductController.handle(req, res));
+
+export default router;
