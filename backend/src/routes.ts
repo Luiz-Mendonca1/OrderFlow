@@ -18,6 +18,8 @@ import { DeleteProductController } from './controllers/product/DeleteProductCont
 import { ListProductCategoryController } from './controllers/product/ListProductCategoryController';
 import { ListOrderController } from './controllers/order/ListOrderController';
 import { CreateOrderController } from './controllers/order/CreateOrderController';
+import { AddItemOrderController } from './controllers/order/AddItemOrderController';
+import { addItemOrderSchema } from './schemas/orderSchema';
 
 const router = Router();
 const upload = multer(uploadConfig);
@@ -57,5 +59,8 @@ router.get('/order', isAuthenticated, (req, res) => listOrderController.handle(r
 
 const createOrderController = new CreateOrderController();
 router.post('/order', isAuthenticated, (req, res) => createOrderController.handle(req, res));
+
+const addItemOrderController = new AddItemOrderController() ;
+router.post('/order/add', isAuthenticated, validateSchema(addItemOrderSchema), (req, res) => addItemOrderController.handle(req, res));
 
 export default router;
