@@ -20,10 +20,19 @@ export const addItemOrderSchema = z.object({
             .positive({message: "Amount must be a positive integer"})
     })
 });
+
 export const removeItemOrderSchema = z.object({
   query: z.object({
     itemId: z
       .string({ message: "Item ID is required" })
       .min(1, { message: "Item ID cannot be empty" }),
   }),
+});
+
+export const detailOrderSchema = z.object({
+  query: z.object({
+    orderId: z
+        .string({ message: "Order ID is required" })
+        .min(1, { message: "Order ID cannot be empty" }),
+    }),
 });

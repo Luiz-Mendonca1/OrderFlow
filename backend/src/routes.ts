@@ -21,6 +21,7 @@ import { CreateOrderController } from './controllers/order/CreateOrderController
 import { AddItemOrderController } from './controllers/order/AddItemOrderController';
 import { addItemOrderSchema, removeItemOrderSchema } from './schemas/orderSchema';
 import { RemoveItemOrderController } from './controllers/order/RemoveItemOrderController';
+import { DetailOrderController } from './controllers/order/DetailOrderController';
 
 const router = Router();
 const upload = multer(uploadConfig);
@@ -66,5 +67,8 @@ router.post('/order/add', isAuthenticated, validateSchema(addItemOrderSchema), (
 
 const removeItemOrderController = new RemoveItemOrderController();
 router.delete('/order/remove', isAuthenticated, isAdmin, validateSchema(removeItemOrderSchema), (req, res) => removeItemOrderController.handle(req, res));
+
+const detailOrderController = new DetailOrderController();
+router.get('/order/detail', isAuthenticated, (req, res) => detailOrderController.handle(req, res));
 
 export default router;
