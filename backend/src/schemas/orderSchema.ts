@@ -10,6 +10,16 @@ export const orderSchema = z.object({
     })
 });
 
+export const createOrderSchema = z.object({
+    body: z.object({
+        table: z
+            .number({message: "Number of table is required"})
+            .int({message: "Number of table must be an integer"})
+            .positive({message: "Number of table must be a positive integer"}),
+        name: z.string().optional()
+    })
+});
+
 export const addItemOrderSchema = z.object({
     body: z.object({
         orderId: z.string({message: "Order ID is required"}).min(1, {message: "Order ID cannot be empty"}),

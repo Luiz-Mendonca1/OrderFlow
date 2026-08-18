@@ -19,7 +19,7 @@ import { ListProductCategoryController } from './controllers/product/ListProduct
 import { ListOrderController } from './controllers/order/ListOrderController';
 import { CreateOrderController } from './controllers/order/CreateOrderController';
 import { AddItemOrderController } from './controllers/order/AddItemOrderController';
-import { addItemOrderSchema, removeItemOrderSchema } from './schemas/orderSchema';
+import { addItemOrderSchema, createOrderSchema, detailOrderSchema, removeItemOrderSchema } from './schemas/orderSchema';
 import { RemoveItemOrderController } from './controllers/order/RemoveItemOrderController';
 import { DetailOrderController } from './controllers/order/DetailOrderController';
 
@@ -56,11 +56,12 @@ router.delete('/product', isAuthenticated, isAdmin, (req, res) => deleteProductC
 const listProductCategoryController = new ListProductCategoryController();
 router.get('/product/category', isAuthenticated, (req, res) => listProductCategoryController.handle(req, res));
 
+// rotas order
 const listOrderController = new ListOrderController();
 router.get('/order', isAuthenticated, (req, res) => listOrderController.handle(req, res));
 
 const createOrderController = new CreateOrderController();
-router.post('/order', isAuthenticated, (req, res) => createOrderController.handle(req, res));
+router.post('/order', isAuthenticated, validateSchema(createOrderSchema), (req, res) => createOrderController.handle(req, res));
 
 const addItemOrderController = new AddItemOrderController() ;
 router.post('/order/add', isAuthenticated, validateSchema(addItemOrderSchema), (req, res) => addItemOrderController.handle(req, res));
@@ -69,6 +70,6 @@ const removeItemOrderController = new RemoveItemOrderController();
 router.delete('/order/remove', isAuthenticated, isAdmin, validateSchema(removeItemOrderSchema), (req, res) => removeItemOrderController.handle(req, res));
 
 const detailOrderController = new DetailOrderController();
-router.get('/order/detail', isAuthenticated, (req, res) => detailOrderController.handle(req, res));
+router.get('/order/detail', isAuthenticated, validateSchema(detailOrderSchema), (req, res) => detailOrderController.handle(req, res));
 
 export default router;
