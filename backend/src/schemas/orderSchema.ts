@@ -62,3 +62,11 @@ export const finishOrderSchema = z.object({
         .min(1, { message: "Order ID cannot be empty" }),
     }),
 });
+
+export const deleteOrderSchema = z.object({
+  query: z.object({
+    orderId: z
+        .string({ message: "Order ID is required" })
+        .min(1, { message: "Order ID cannot be empty" }),
+    }),
+});

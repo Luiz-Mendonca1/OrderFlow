@@ -19,11 +19,12 @@ import { ListProductCategoryController } from './controllers/product/ListProduct
 import { ListOrderController } from './controllers/order/ListOrderController';
 import { CreateOrderController } from './controllers/order/CreateOrderController';
 import { AddItemOrderController } from './controllers/order/AddItemOrderController';
-import { addItemOrderSchema, createOrderSchema, detailOrderSchema, finishOrderSchema, removeItemOrderSchema, sendOrderSchema } from './schemas/orderSchema';
+import { addItemOrderSchema, createOrderSchema, deleteOrderSchema, removeItemOrderSchema, sendOrderSchema, detailOrderSchema, finishOrderSchema  } from './schemas/orderSchema';
 import { RemoveItemOrderController } from './controllers/order/RemoveItemOrderController';
 import { DetailOrderController } from './controllers/order/DetailOrderController';
 import { SendOrderController } from './controllers/order/SendOrderController';
 import { FinishOrderController } from './controllers/order/FinishOrderController';
+import { DeleteOrderController } from './controllers/order/DeleteOrderController';
 
 const router = Router();
 const upload = multer(uploadConfig);
@@ -79,5 +80,8 @@ router.put('/order/send', isAuthenticated, validateSchema(sendOrderSchema), (req
 
 const finishOrderController = new FinishOrderController();
 router.put('/order/finish', isAuthenticated, validateSchema(finishOrderSchema), (req, res) => finishOrderController.handle(req, res));
+
+const deleteOrderController = new DeleteOrderController();
+router.delete('/order/delete', isAuthenticated, isAdmin, validateSchema(deleteOrderSchema), (req, res) => deleteOrderController.handle(req, res));
 
 export default router;
