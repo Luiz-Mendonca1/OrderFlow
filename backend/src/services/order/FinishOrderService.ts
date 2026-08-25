@@ -1,11 +1,11 @@
 import prismaClient from "../../prisma";
 
-interface SendOrderProps {
+interface FinishOrderProps {
     orderId: string;
 }
 
-class SendOrderService {
-    async execute({ orderId }: SendOrderProps) {
+class FinishOrderService {
+    async execute({ orderId }: FinishOrderProps) {
         try {
             const order = await prismaClient.order.findFirst({ 
                 where: {
@@ -14,7 +14,7 @@ class SendOrderService {
             });
 
             if (!order) {
-                throw new Error("Order not found");
+                throw new Error("Fail to finish order. Order not found.");
             }
 
             const updatedOrder = await prismaClient.order.update({
@@ -22,8 +22,7 @@ class SendOrderService {
                     id: orderId
                 },
                 data: {
-                    draft: false,
-                    name: order.name,},
+                    status: true},
                 select: {
                     id: true,
                     table: true,
@@ -42,4 +41,4 @@ class SendOrderService {
     }
 }
 
-export { SendOrderService };
+export { FinishOrderService };

@@ -54,3 +54,11 @@ export const sendOrderSchema = z.object({
         .min(1, { message: "Order ID cannot be empty" }),
     }),
 });
+
+export const finishOrderSchema = z.object({
+  body: z.object({
+    orderId: z
+        .string({ message: "Order ID is required" })
+        .min(1, { message: "Order ID cannot be empty" }),
+    }),
+});
