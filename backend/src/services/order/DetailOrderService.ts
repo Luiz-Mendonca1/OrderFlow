@@ -14,6 +14,7 @@ class DetailOrderService {
                 select: {
                     id: true,
                     table: true,
+                    name: true,
                     status: true,
                     draft: true,
                     createdAt: true,

@@ -8,11 +8,12 @@ class ListOrderService {
   async execute({ draft }: ListOrderServiceProps) {
     const orders = await prismaClient.order.findMany({
       where: {
-        draft: draft === "true",
+        ...(draft !== undefined ? { draft: draft === "true" } : {}),
       },
       select: {
         id: true,
         table: true,
+        name: true,
         draft: true,
         status: true,
         createdAt: true,
@@ -31,6 +32,9 @@ class ListOrderService {
             },
           },
         },
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
