@@ -30,9 +30,10 @@ export default function LoginPage() {
         throw new Error(data.error || "Falha na autenticação. Verifique os dados.");
       }
 
-      // Salva o token JWT e os dados do usuário
       localStorage.setItem("@app:token", data.token);
       localStorage.setItem("@app:user", JSON.stringify(data));
+
+      document.cookie = `@app:token=${data.token}; path=/; max-age=2592000; SameSite=Lax`;
 
       router.push("/");
     } catch (err) {
