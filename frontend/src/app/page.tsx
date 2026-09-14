@@ -1,33 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@/contexts/ThemeContext";
+import { logoutAction } from "@/app/actions/auth";
 
 export default function Home() {
   const router = useRouter();
   const { theme, toggleTheme, setPrimaryColor } = useTheme();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("@app:token");
-    if (!token) {
-      router.replace("/login");
-    } else {
-      setIsAuthenticated(true);
-    }
-  }, [router]);
+  const [isLoggingOut, startLogout] = useTransition();
 
   function handleLogout() {
-    localStorage.removeItem("@app:token");
-    localStorage.removeItem("@app:user");
-    document.cookie = "@app:token=; path=/; max-age=0";
-    router.push("/login");
-  }
-
-  if (!isAuthenticated) {
-    return null;
+    startLogout(async () => {
+      await logoutAction();
+      router.replace("/login");
+      router.refresh();
+    });
   }
 
   return (
@@ -85,7 +74,7 @@ export default function Home() {
             onClick={handleLogout}
             className="w-full py-2.5 px-4 rounded-lg font-medium border border-border text-foreground hover:bg-danger/10 hover:text-danger hover:border-danger transition-colors cursor-pointer text-sm"
           >
-            Sair da Conta
+            {isLoggingOut ? "Saindo..." : "Sair da Conta"}
           </button>
         </div>
       </div>

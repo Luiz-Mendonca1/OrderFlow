@@ -1,50 +1,19 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useActionState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { API_URL } from "@/app/services/api";
+import { loginAction } from "@/app/actions/auth";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [state, formAction, pending] = useActionState(loginAction, { success: false, error: "" });
 
-  async function handleLogin(e: FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    try {
-      const response = await fetch(`${API_URL}/session`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Falha na autenticação. Verifique os dados.");
-      }
-
-      // Armazena o token e apenas as informações de perfil do usuário
-      localStorage.setItem("@app:token", data.token);
-      localStorage.setItem("@app:user", JSON.stringify({ id: data.id, name: data.name, email: data.email }));
-
-      // Define o cookie de sessão
-      document.cookie = `@app:token=${data.token}; path=/; max-age=2592000; SameSite=Lax`;
-
-      // Garante o recarregamento dos estados de sessão no Next.js App Router
-      window.location.href = "/";
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ocorreu um erro inesperado.");
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (state.success && state.redirectTo) {
+      window.location.assign(state.redirectTo);
     }
-  }
+  }, [state]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
@@ -56,13 +25,13 @@ export default function LoginPage() {
           <p className="text-sm text-muted">Entre com suas credenciais para continuar</p>
         </div>
 
-        {error && (
+        {state.error && (
           <div className="p-3 text-sm rounded-lg bg-danger/10 border border-danger/20 text-danger text-center">
-            {error}
+            {state.error}
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form action={formAction} className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-foreground" htmlFor="email">
               E-mail
@@ -95,10 +64,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={pending}
             className="w-full py-2.5 px-4 rounded-lg bg-primary hover:bg-primary-hover text-primary-foreground font-semibold text-sm transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
-            {loading ? "Entrando..." : "Entrar"}
+            {pending ? "Entrando..." : "Entrar"}
           </button>
         </form>
 
