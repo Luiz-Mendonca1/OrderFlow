@@ -1,14 +1,8 @@
 "use server";
 
-import { cookies } from "next/headers";
-import { api } from "@/app/services/api";
-
-interface AuthResponse {
-  id: string;
-  name: string;
-  email: string;
-  token: string;
-}
+import { api } from "@/app/lib/api";
+import { clearAuthToken, setAuthToken } from "@/app/lib/auth";
+import type { AuthResponse } from "@/app/lib/types";
 
 export interface AuthActionState {
   success: boolean;
@@ -74,15 +68,7 @@ export async function loginAction(
       return { success: false, error: "Resposta inválida do servidor." };
     }
 
-    // Salva o token no Cookie HttpOnly
-    const cookieStore = await cookies();
-    cookieStore.set("@app:token", data.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 30, // 30 dias
-      path: "/",
-      sameSite: "lax",
-    });
+    await setAuthToken(data.token);
 
     return { success: true, error: "", redirectTo: "/" };
   } catch {
@@ -91,7 +77,6 @@ export async function loginAction(
 }
 
 export async function logoutAction() {
-  const cookieStore = await cookies();
-  cookieStore.delete("@app:token");
+  await clearAuthToken();
   return initialAuthState;
 }

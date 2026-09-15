@@ -3,7 +3,7 @@
 import { useState, FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { API_URL } from "@/app/services/api";
+import { api } from "@/app/lib/api";
 
 
 export default function RegisterPage() {
@@ -20,7 +20,7 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/users`, {
+      const response = await api("/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
