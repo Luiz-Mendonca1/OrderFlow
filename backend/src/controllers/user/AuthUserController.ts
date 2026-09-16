@@ -7,9 +7,13 @@ class AuthUserController {
 
         const authService = new AuthUserService();
 
-        const session = await authService.execute({ email, password });
+        try {
+            const session = await authService.execute({ email, password });
 
-        res.json(session);
+            return res.json(session);
+        } catch {
+            return res.status(401).json({ error: 'E-mail ou senha incorretos.' });
+        }
     }
 }
 

@@ -38,6 +38,7 @@ export default function LoginPage() {
             </label>
             <input
               id="email"
+              name="email"
               type="email"
               required
               placeholder="seuemail@exemplo.com"
@@ -53,6 +54,7 @@ export default function LoginPage() {
             </label>
             <input
               id="password"
+              name="password"
               type="password"
               required
               placeholder="••••••••"

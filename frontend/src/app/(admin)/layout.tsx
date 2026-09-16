@@ -1,4 +1,5 @@
 import { requiredAdmin } from "@/lib/auth";
+import { Sidebar } from "lucide-react";
 
 export default async function DashboardLayout({
   children,
@@ -7,5 +8,10 @@ export default async function DashboardLayout({
 }) {
   await requiredAdmin();
 
-  return <main className="min-h-screen bg-background">{children}</main>;
+  return (
+    <div>
+    <Sidebar />
+      <main className="min-h-screen bg-background">{children}</main>
+    </div>
+  );
 }

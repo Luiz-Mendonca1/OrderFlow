@@ -18,6 +18,7 @@ export async function api(endpoint: string, init: ApiRequestInit = {}) {
 
 	return fetch(`${API_URL}${endpoint}`, {
 		...requestInit,
+		signal: requestInit.signal ?? AbortSignal.timeout(10000),
 		headers,
 	});
 }
