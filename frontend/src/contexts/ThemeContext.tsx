@@ -24,8 +24,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const savedTheme = localStorage.getItem("@app:theme") as Theme | null;
     const initialTheme = savedTheme ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     
-    // O tema salvo precisa sincronizar o estado após a hidratação.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme(initialTheme);
     document.documentElement.classList.toggle("dark", initialTheme === "dark");
 
