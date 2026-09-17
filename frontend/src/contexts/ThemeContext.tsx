@@ -4,6 +4,11 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 
 type Theme = "light" | "dark";
 
+type PrimaryColor = {
+  color: string;
+  hover: string;
+};
+
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
@@ -19,8 +24,23 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const savedTheme = localStorage.getItem("@app:theme") as Theme | null;
     const initialTheme = savedTheme ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     
+    // O tema salvo precisa sincronizar o estado após a hidratação.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme(initialTheme);
     document.documentElement.classList.toggle("dark", initialTheme === "dark");
+
+    const savedPrimary = localStorage.getItem("@app:primary");
+    if (savedPrimary) {
+      try {
+        const primary = JSON.parse(savedPrimary) as Partial<PrimaryColor>;
+        if (typeof primary.color === "string" && typeof primary.hover === "string") {
+          document.documentElement.style.setProperty("--primary", primary.color);
+          document.documentElement.style.setProperty("--primary-hover", primary.hover);
+        }
+      } catch {
+        localStorage.removeItem("@app:primary");
+      }
+    }
   }, []);
 
   const toggleTheme = () => {
@@ -30,10 +50,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     document.documentElement.classList.toggle("dark", nextTheme === "dark");
   };
 
-  // Permite mudar a cor primária em tempo de execução via JS
   const setPrimaryColor = (colorHex: string, hoverHex: string) => {
     document.documentElement.style.setProperty("--primary", colorHex);
     document.documentElement.style.setProperty("--primary-hover", hoverHex);
+    localStorage.setItem(
+      "@app:primary",
+      JSON.stringify({ color: colorHex, hover: hoverHex })
+    );
   };
 
   return (

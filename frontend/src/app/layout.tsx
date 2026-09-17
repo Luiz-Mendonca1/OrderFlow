@@ -28,6 +28,15 @@ const themeInitializerScript = `
       } else {
         document.documentElement.classList.remove('dark');
       }
+
+      var savedPrimary = localStorage.getItem('@app:primary');
+      if (savedPrimary) {
+        var primary = JSON.parse(savedPrimary);
+        if (typeof primary.color === 'string' && typeof primary.hover === 'string') {
+          document.documentElement.style.setProperty('--primary', primary.color);
+          document.documentElement.style.setProperty('--primary-hover', primary.hover);
+        }
+      }
     } catch (e) {}
   })();
 `;
