@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pizzaria / Restaurante",
-  description: "Gerenciamento de cardápio e pedidos",
+  title: "OrderFlow",
+  description: "Gerenciamento de pedidos",
 };
 
 const themeInitializerScript = `

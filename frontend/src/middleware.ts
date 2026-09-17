@@ -6,13 +6,17 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isPublicRoute = pathname === "/login" || pathname === "/register";
+  const isPrivateRoute =
+    pathname === "/dashboard" ||
+    pathname === "/categories" ||
+    pathname === "/products";
 
-  if (!token && !isPublicRoute) {
+  if (!token && isPrivateRoute) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   if (token && isPublicRoute) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return NextResponse.next();

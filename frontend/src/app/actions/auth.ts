@@ -70,7 +70,7 @@ export async function loginAction(
 
     await setAuthToken(data.token);
 
-    return { success: true, error: "", redirectTo: "/" };
+    return { success: true, error: "", redirectTo: "/dashboard" };
   } catch {
     return { success: false, error: "Falha na comunicação com o servidor." };
   }

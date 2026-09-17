@@ -11,7 +11,7 @@ type AuthenticatedUser = {
   createdAt: string;
 };
 
-export async function requiredAdmin(): Promise<AuthenticatedUser> {
+export async function requiredUser(): Promise<AuthenticatedUser> {
   const token = (await cookies()).get("@app:token")?.value;
 
   if (!token) {
@@ -29,10 +29,6 @@ export async function requiredAdmin(): Promise<AuthenticatedUser> {
     }
 
     const user = (await response.json()) as AuthenticatedUser;
-
-    if (user.role !== "ADMIN") {
-      redirect("/login");
-    }
 
     return user;
   } catch {
