@@ -3,7 +3,7 @@ import { DeleteProductService } from "../../services/product/DeleteProductServic
 
 class DeleteProductController {
   async handle(req: Request, res: Response) {
-    const id = req.query.id as string;
+    const id = (req.query.product_id ?? req.query.id) as string;
 
     const deleteProductService = new DeleteProductService();
     const result = await deleteProductService.execute({ id });

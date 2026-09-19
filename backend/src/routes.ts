@@ -14,9 +14,10 @@ import { ListCategoryController } from './controllers/category/ListCategoryContr
 import { UpdateCategoryController } from './controllers/category/UpdateCategoryController';
 import { DeleteCategoryController } from './controllers/category/DeleteCategoryController';
 import { CreateProductController } from './controllers/product/CreateProductController';
-import { createProductSchema } from './schemas/productSchema';
+import { createProductSchema, updateProductSchema } from './schemas/productSchema';
 import { ListProductController } from './controllers/product/ListProductController';
 import { DeleteProductController } from './controllers/product/DeleteProductController';
+import { UpdateProductController } from './controllers/product/UpdateProductController';
 import { ListProductCategoryController } from './controllers/product/ListProductCategoryController';
 import { ListOrderController } from './controllers/order/ListOrderController';
 import { CreateOrderController } from './controllers/order/CreateOrderController';
@@ -56,13 +57,16 @@ router.delete('/category', isAuthenticated, validateSchema(deleteCategorySchema)
 
 // rotas product
 const createProductController = new CreateProductController();
-router.post('/product', isAuthenticated, isAdmin, upload.single('file'), validateSchema(createProductSchema), (req, res) => createProductController.handle(req, res));
+router.post('/product', isAuthenticated, upload.single('file'), validateSchema(createProductSchema), (req, res) => createProductController.handle(req, res));
+
+const updateProductController = new UpdateProductController();
+router.put('/product', isAuthenticated, upload.single('file'), validateSchema(updateProductSchema), (req, res) => updateProductController.handle(req, res));
 
 const listProductController = new ListProductController();
 router.get('/product', isAuthenticated, (req, res) => listProductController.handle(req, res));
 
 const deleteProductController = new DeleteProductController();
-router.delete('/product', isAuthenticated, isAdmin, (req, res) => deleteProductController.handle(req, res));
+router.delete('/product', isAuthenticated, (req, res) => deleteProductController.handle(req, res));
 
 const listProductCategoryController = new ListProductCategoryController();
 router.get('/product/category', isAuthenticated, (req, res) => listProductCategoryController.handle(req, res));
