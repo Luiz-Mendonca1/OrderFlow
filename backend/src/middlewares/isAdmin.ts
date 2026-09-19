@@ -7,7 +7,7 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction): 
 
     // Check if the user is an admin
     if(!user_id) {
-        res.status(401).json({ message: 'User not authenticated' });
+        res.status(401).json({ error: 'User not authenticated' });
         return;
     }
 
@@ -18,12 +18,12 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction): 
     });
 
     if (!user) {
-        res.status(403).json({ message: 'User not found or not an admin' });
+        res.status(403).json({ error: 'User not found or not an admin' });
         return;
     }
 
     if(user.role !== 'ADMIN') {
-        res.status(403).json({ message: 'User is not an admin' });
+        res.status(403).json({ error: 'User is not an admin' });
         return;
     }
 

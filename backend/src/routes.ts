@@ -9,8 +9,10 @@ import { DetailUserController } from './controllers/user/DetailUserController';
 import { isAuthenticated } from './middlewares/isAuthenticated';
 import { CreateCategoryController } from './controllers/category/CreateCategoryController';
 import { isAdmin } from './middlewares/isAdmin';
-import { createCategorySchema } from './schemas/categorySchema';
+import { createCategorySchema, deleteCategorySchema, updateCategorySchema } from './schemas/categorySchema';
 import { ListCategoryController } from './controllers/category/ListCategoryController';
+import { UpdateCategoryController } from './controllers/category/UpdateCategoryController';
+import { DeleteCategoryController } from './controllers/category/DeleteCategoryController';
 import { CreateProductController } from './controllers/product/CreateProductController';
 import { createProductSchema } from './schemas/productSchema';
 import { ListProductController } from './controllers/product/ListProductController';
@@ -41,10 +43,16 @@ router.get('/me', isAuthenticated, (req, res) => detailUserController.handle(req
 
 // rotas category
 const createCategoryController = new CreateCategoryController();
-router.post('/category', isAuthenticated, isAdmin, validateSchema(createCategorySchema), (req, res) => createCategoryController.handle(req, res));
+router.post('/category', isAuthenticated, validateSchema(createCategorySchema), (req, res) => createCategoryController.handle(req, res));
 
 const listCategoryController = new ListCategoryController();
 router.get('/category', isAuthenticated, (req, res) => listCategoryController.handle(req, res));
+
+const updateCategoryController = new UpdateCategoryController();
+router.put('/category', isAuthenticated, validateSchema(updateCategorySchema), (req, res) => updateCategoryController.handle(req, res));
+
+const deleteCategoryController = new DeleteCategoryController();
+router.delete('/category', isAuthenticated, validateSchema(deleteCategorySchema), (req, res) => deleteCategoryController.handle(req, res));
 
 // rotas product
 const createProductController = new CreateProductController();

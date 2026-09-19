@@ -39,7 +39,7 @@ async function CategoriesContent() {
 	}
 
 	const categories = (await response.json()) as Category[];
-	return <CategoryList categories={categories} />;
+	return <CategoryList categories={categories} token={token} />;
 }
 
 function CategoriesLoading() {
