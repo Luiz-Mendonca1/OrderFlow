@@ -6,10 +6,6 @@ class CreateProductController {
         const { name, description, price } = req.body;
         const category_id = req.body.category_id ?? req.body.categoryId;
 
-        if (!req.file) {
-            return res.status(400).json({ error: 'File is required' });
-        }
-
         if (!category_id) {
             return res.status(400).json({ error: 'Category id is required' });
         }
@@ -17,14 +13,14 @@ class CreateProductController {
         const createProduct = new CreateProductService();
 
         try {
-            const file = req.file as Express.Multer.File & { buffer: Buffer };
+            const file = req.file as (Express.Multer.File & { buffer: Buffer }) | undefined;
             const product = await createProduct.execute({
                 name,
                 description,
                 price: Number(price),
                 category_id,
-                imageBuffer: file.buffer,
-                imageName: file.originalname,
+                imageBuffer: file?.buffer,
+                imageName: file?.originalname,
             });
 
             return res.status(201).json(product);

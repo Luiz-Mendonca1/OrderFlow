@@ -6,8 +6,8 @@ interface CreateProductServiceProps {
     description: string;
     price: number;
     category_id: string;
-    imageBuffer: Buffer;
-    imageName: string;
+    imageBuffer?: Buffer;
+    imageName?: string;
 }
 
 class CreateProductService {
@@ -28,7 +28,8 @@ class CreateProductService {
 
          let bannerUrl = '';
 
-        try {
+                if (imageBuffer && imageName) {
+                    try {
             const result = await new Promise<any>((resolve, reject) => {
                 const uploadStream = cloudinary.uploader.upload_stream(
                     {
@@ -49,9 +50,10 @@ class CreateProductService {
             });
 
             bannerUrl = result?.secure_url || result?.url || '';
-        } catch (error) {
-            console.error('Error uploading image to Cloudinary:', error);
-            throw new Error('Failed to upload image');
+          } catch (error) {
+              console.error('Error uploading image to Cloudinary:', error);
+              throw new Error('Failed to upload image');
+          }
         }
 
         try {
