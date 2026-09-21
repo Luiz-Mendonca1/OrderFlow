@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   ClipboardList,
+  BarChart3,
   ListPlus,
   LogOut,
   Menu,
@@ -19,6 +20,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 
 const menuItems = [
   { name: "Pedidos", href: "/dashboard", icon: ClipboardList },
+  { name: "Relatórios", href: "/reports", icon: BarChart3 },
   { name: "Categorias", href: "/categories", icon: ListPlus },
   { name: "Produtos", href: "/products", icon: Package },
 ];
