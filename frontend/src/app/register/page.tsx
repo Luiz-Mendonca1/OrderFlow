@@ -3,37 +3,28 @@
 import { useState, FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { api } from "@/app/lib/api";
+import { registerAction } from "@/app/actions/auth";
 
 
 export default function RegisterPage() {
   const router = useRouter();
   const [name, setName] = useState("");
+  const [organizationName, setOrganizationName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleRegister(e: FormEvent) {
+  async function handleRegister(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
     try {
-      const response = await api("/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Erro ao criar conta. Verifique os dados.");
-      }
-
-      // Redireciona para o login após cadastro com sucesso
-      router.push("/login");
+      const formData = new FormData(e.currentTarget);
+      const result = await registerAction(null, formData);
+      if (!result.success) throw new Error(result.error);
+      router.push(result.redirectTo || "/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ocorreu um erro inesperado.");
     } finally {
@@ -59,11 +50,28 @@ export default function RegisterPage() {
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div className="space-y-1.5">
+            <label className="text-sm font-medium text-foreground" htmlFor="organizationName">
+              Nome do Estabelecimento
+            </label>
+            <input
+              id="organizationName"
+              name="organizationName"
+              type="text"
+              required
+              minLength={2}
+              placeholder="Ex.: Pizzaria da Praça"
+              value={organizationName}
+              onChange={(e) => setOrganizationName(e.target.value)}
+              className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm"
+            />
+          </div>
+          <div className="space-y-1.5">
             <label className="text-sm font-medium text-foreground" htmlFor="name">
               Nome Completo
             </label>
             <input
               id="name"
+              name="name"
               type="text"
               required
               placeholder="Seu nome"
@@ -79,6 +87,7 @@ export default function RegisterPage() {
             </label>
             <input
               id="email"
+              name="email"
               type="email"
               required
               placeholder="seuemail@exemplo.com"
@@ -94,6 +103,7 @@ export default function RegisterPage() {
             </label>
             <input
               id="password"
+              name="password"
               type="password"
               required
               minLength={6}

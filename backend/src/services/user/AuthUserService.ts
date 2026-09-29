@@ -28,8 +28,9 @@ class AuthUserService {
         }
 
         const token = sign({
-            name: user.name,
-            email: user.email
+            userId: user.id,
+            organizationId: user.organizationId,
+            role: user.role,
         },
          process.env.JWT_SECRET as string, 
         {
@@ -42,6 +43,7 @@ class AuthUserService {
             name: user.name,
             email: user.email,
             role: user.role,
+            organizationId: user.organizationId,
             token
         };
     }

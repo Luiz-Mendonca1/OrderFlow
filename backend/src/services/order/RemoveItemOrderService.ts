@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import { getOrganizationId } from "../../prisma/tenantContext";
 
 interface RemoveItemProps {
     itemId: string;
@@ -7,21 +8,19 @@ interface RemoveItemProps {
 export class RemoveItemOrderService {
     async execute({ itemId }: RemoveItemProps) {
         try {   
-        const item = await prismaClient.item.findFirst({
+        const organizationId = getOrganizationId();
+        if (!organizationId) throw new Error("Organization context is missing.");
+
+        const result = await prismaClient.item.deleteMany({
             where: {
-                id: itemId
-            }
+                id: itemId,
+                order: { organizationId },
+            },
         });
 
-        if (!item) {
+        if (result.count === 0) {
             throw new Error("Item not found.");
         }
-
-        await prismaClient.item.delete({
-            where: {
-                id: itemId
-            }
-        });
 
         return { message: "Item removed successfully." };
     }

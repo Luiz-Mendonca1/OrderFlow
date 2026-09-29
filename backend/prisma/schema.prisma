@@ -12,38 +12,60 @@ enum Role {
   ADMIN
 }
 
+model Organization {
+  id         String     @id @default(uuid())
+  name       String
+  slug       String     @unique
+  createdAt  DateTime   @default(now())
+  users      User[]
+  categories Category[]
+  products   Product[]
+  orders     Order[]
+
+  @@map("organizations")
+}
+
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(STAFF)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String       @id @default(uuid())
+  name           String
+  email          String       @unique
+  password       String
+  role           Role         @default(STAFF)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
   @@map("users")
 }
 
 model Category {
-  id        String    @id @default(uuid())
-  name      String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products  Product[]
+  id             String       @id @default(uuid())
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  products       Product[]
+
+  @@unique([organizationId, name])
+  @@unique([id, organizationId])
 
   @@map("categories")
 }
 
 model Product {
-  id          String  @id @default(uuid())
-  name        String
-  price       Float
-  description String
-  banner      String
-  disabled    Boolean @default(false)
+  id             String       @id @default(uuid())
+  name           String
+  price          Float
+  description    String
+  banner         String
+  disabled       Boolean      @default(false)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   categoryId String
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId, organizationId], references: [id, organizationId], onDelete: Cascade)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   items      Item[]
@@ -52,14 +74,16 @@ model Product {
 }
 
 model Order {
-  id        String   @id @default(uuid())
-  name      String?
-  table     Int
-  status    Boolean  @default(false)
-  draft     Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  items     Item[]
+  id             String       @id @default(uuid())
+  name           String?
+  table          Int
+  status         Boolean      @default(false)
+  draft          Boolean      @default(true)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  items          Item[]
 
   @@map("orders")
 }

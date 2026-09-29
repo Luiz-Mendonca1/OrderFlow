@@ -35,3 +35,9 @@ export async function requiredUser(): Promise<AuthenticatedUser> {
     redirect("/login");
   }
 }
+
+export async function requiredAdmin() {
+  const user = await requiredUser();
+  if (user.role !== "ADMIN") redirect("/dashboard");
+  return user;
+}

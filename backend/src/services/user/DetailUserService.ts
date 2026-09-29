@@ -13,6 +13,7 @@ class DetailUserService {
                 name: true,
                 email: true,
                 role: true,
+                organizationId: true,
                 createdAt: true,
             }
         });

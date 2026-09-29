@@ -14,18 +14,20 @@ import {
   Palette,
   Sun,
   X,
+  Users,
 } from "lucide-react";
 import { logoutAction } from "@/app/actions/auth";
 import { useTheme } from "@/contexts/ThemeContext";
 
 const menuItems = [
-  { name: "Pedidos", href: "/dashboard", icon: ClipboardList },
-  { name: "Relatórios", href: "/reports", icon: BarChart3 },
-  { name: "Categorias", href: "/categories", icon: ListPlus },
-  { name: "Produtos", href: "/products", icon: Package },
+  { name: "Pedidos", href: "/dashboard", icon: ClipboardList, adminOnly: false },
+  { name: "Relatórios", href: "/reports", icon: BarChart3, adminOnly: true },
+  { name: "Categorias", href: "/categories", icon: ListPlus, adminOnly: true },
+  { name: "Produtos", href: "/products", icon: Package, adminOnly: true },
+  { name: "Equipe", href: "/team", icon: Users, adminOnly: true },
 ];
 
-function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
+function SidebarContent({ role, onNavigate }: { role: "ADMIN" | "STAFF"; onNavigate?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggleTheme, setPrimaryColor } = useTheme();
@@ -56,7 +58,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         </div>
 
         <nav className="space-y-1">
-          {menuItems.map((item) => {
+          {menuItems.filter((item) => role === "ADMIN" || !item.adminOnly).map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
 
@@ -141,7 +143,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-export function Sidebar() {
+export function Sidebar({ role }: { role: "ADMIN" | "STAFF" }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -159,7 +161,7 @@ export function Sidebar() {
       </header>
 
       <aside className="hidden min-h-screen w-64 flex-col justify-between border-r border-zinc-200 bg-zinc-100 p-4 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 md:flex">
-        <SidebarContent />
+        <SidebarContent role={role} />
       </aside>
 
       <div
@@ -189,7 +191,7 @@ export function Sidebar() {
           >
             <X size={20} />
           </button>
-          <SidebarContent onNavigate={() => setIsOpen(false)} />
+          <SidebarContent role={role} onNavigate={() => setIsOpen(false)} />
         </aside>
       </div>
     </>

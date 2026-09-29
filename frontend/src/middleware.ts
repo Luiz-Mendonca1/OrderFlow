@@ -9,7 +9,9 @@ export function middleware(request: NextRequest) {
   const isPrivateRoute =
     pathname === "/dashboard" ||
     pathname === "/categories" ||
-    pathname === "/products";
+    pathname === "/products" ||
+    pathname === "/reports" ||
+    pathname === "/team";
 
   if (!token && isPrivateRoute) {
     return NextResponse.redirect(new URL("/login", request.url));

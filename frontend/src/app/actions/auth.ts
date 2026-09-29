@@ -20,22 +20,26 @@ export async function registerAction(
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const organizationName = formData.get("organizationName") as string;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !organizationName) {
       return { success: false, error: "Preencha todos os campos." };
     }
 
     const response = await api("/users", {
       method: "POST",
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email, password, organizationName }),
     });
 
+    const data = (await response.json()) as Partial<AuthResponse> & { error?: string };
     if (!response.ok) {
-      const data = await response.json();
       return { success: false, error: data.error || "Erro ao criar conta." };
     }
 
-    return { success: true, error: "", redirectTo: "/login" };
+    if (!data.token) return { success: false, error: "Resposta inválida do servidor." };
+
+    await setAuthToken(data.token);
+    return { success: true, error: "", redirectTo: "/dashboard" };
   } catch {
     return { success: false, error: "Falha na comunicação com o servidor." };
   }

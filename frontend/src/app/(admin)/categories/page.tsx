@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { FolderOpen } from "lucide-react";
 import { api } from "@/app/lib/api";
 import { getAuthToken } from "@/app/lib/auth";
+import { requiredAdmin } from "@/lib/auth";
 import { CategoryList } from "./CategoryList";
 
 type Category = {
@@ -31,6 +32,7 @@ export default function CategoriesPage() {
 }
 
 async function CategoriesContent() {
+	await requiredAdmin();
 	const token = await getAuthToken();
 	const response = await api("/category", { token });
 

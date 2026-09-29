@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { api } from "@/app/lib/api";
 import { getAuthToken } from "@/app/lib/auth";
+import { requiredAdmin } from "@/lib/auth";
 import { ReportDashboard, ReportOrder } from "./ReportDashboard";
 
 export default function ReportsPage() {
@@ -8,6 +9,7 @@ export default function ReportsPage() {
 }
 
 async function ReportsContent() {
+  await requiredAdmin();
   const token = await getAuthToken();
   const response = await api("/order", { token });
   if (!response.ok) throw new Error("Não foi possível carregar os dados dos relatórios.");

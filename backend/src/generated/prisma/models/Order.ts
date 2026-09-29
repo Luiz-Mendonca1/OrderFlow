@@ -40,6 +40,7 @@ export type OrderMinAggregateOutputType = {
   table: number | null
   status: boolean | null
   draft: boolean | null
+  organizationId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +51,7 @@ export type OrderMaxAggregateOutputType = {
   table: number | null
   status: boolean | null
   draft: boolean | null
+  organizationId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,6 +62,7 @@ export type OrderCountAggregateOutputType = {
   table: number
   status: number
   draft: number
+  organizationId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -80,6 +83,7 @@ export type OrderMinAggregateInputType = {
   table?: true
   status?: true
   draft?: true
+  organizationId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -90,6 +94,7 @@ export type OrderMaxAggregateInputType = {
   table?: true
   status?: true
   draft?: true
+  organizationId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +105,7 @@ export type OrderCountAggregateInputType = {
   table?: true
   status?: true
   draft?: true
+  organizationId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -197,6 +203,7 @@ export type OrderGroupByOutputType = {
   table: number
   status: boolean
   draft: boolean
+  organizationId: string
   createdAt: Date
   updatedAt: Date
   _count: OrderCountAggregateOutputType | null
@@ -230,8 +237,10 @@ export type OrderWhereInput = {
   table?: Prisma.IntFilter<"Order"> | number
   status?: Prisma.BoolFilter<"Order"> | boolean
   draft?: Prisma.BoolFilter<"Order"> | boolean
+  organizationId?: Prisma.StringFilter<"Order"> | string
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
+  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   items?: Prisma.ItemListRelationFilter
 }
 
@@ -241,8 +250,10 @@ export type OrderOrderByWithRelationInput = {
   table?: Prisma.SortOrder
   status?: Prisma.SortOrder
   draft?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  organization?: Prisma.OrganizationOrderByWithRelationInput
   items?: Prisma.ItemOrderByRelationAggregateInput
 }
 
@@ -255,8 +266,10 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   table?: Prisma.IntFilter<"Order"> | number
   status?: Prisma.BoolFilter<"Order"> | boolean
   draft?: Prisma.BoolFilter<"Order"> | boolean
+  organizationId?: Prisma.StringFilter<"Order"> | string
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
+  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   items?: Prisma.ItemListRelationFilter
 }, "id">
 
@@ -266,6 +279,7 @@ export type OrderOrderByWithAggregationInput = {
   table?: Prisma.SortOrder
   status?: Prisma.SortOrder
   draft?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.OrderCountOrderByAggregateInput
@@ -284,6 +298,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   table?: Prisma.IntWithAggregatesFilter<"Order"> | number
   status?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
   draft?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
+  organizationId?: Prisma.StringWithAggregatesFilter<"Order"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
 }
@@ -296,6 +311,7 @@ export type OrderCreateInput = {
   draft?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutOrdersInput
   items?: Prisma.ItemCreateNestedManyWithoutOrderInput
 }
 
@@ -305,6 +321,7 @@ export type OrderUncheckedCreateInput = {
   table: number
   status?: boolean
   draft?: boolean
+  organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutOrderInput
@@ -318,6 +335,7 @@ export type OrderUpdateInput = {
   draft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutOrdersNestedInput
   items?: Prisma.ItemUpdateManyWithoutOrderNestedInput
 }
 
@@ -327,6 +345,7 @@ export type OrderUncheckedUpdateInput = {
   table?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   draft?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -338,6 +357,7 @@ export type OrderCreateManyInput = {
   table: number
   status?: boolean
   draft?: boolean
+  organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -358,8 +378,19 @@ export type OrderUncheckedUpdateManyInput = {
   table?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   draft?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OrderListRelationFilter = {
+  every?: Prisma.OrderWhereInput
+  some?: Prisma.OrderWhereInput
+  none?: Prisma.OrderWhereInput
+}
+
+export type OrderOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type OrderCountOrderByAggregateInput = {
@@ -368,6 +399,7 @@ export type OrderCountOrderByAggregateInput = {
   table?: Prisma.SortOrder
   status?: Prisma.SortOrder
   draft?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -382,6 +414,7 @@ export type OrderMaxOrderByAggregateInput = {
   table?: Prisma.SortOrder
   status?: Prisma.SortOrder
   draft?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -392,6 +425,7 @@ export type OrderMinOrderByAggregateInput = {
   table?: Prisma.SortOrder
   status?: Prisma.SortOrder
   draft?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -403,6 +437,48 @@ export type OrderSumOrderByAggregateInput = {
 export type OrderScalarRelationFilter = {
   is?: Prisma.OrderWhereInput
   isNot?: Prisma.OrderWhereInput
+}
+
+export type OrderCreateNestedManyWithoutOrganizationInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutOrganizationInput, Prisma.OrderUncheckedCreateWithoutOrganizationInput> | Prisma.OrderCreateWithoutOrganizationInput[] | Prisma.OrderUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutOrganizationInput | Prisma.OrderCreateOrConnectWithoutOrganizationInput[]
+  createMany?: Prisma.OrderCreateManyOrganizationInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUncheckedCreateNestedManyWithoutOrganizationInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutOrganizationInput, Prisma.OrderUncheckedCreateWithoutOrganizationInput> | Prisma.OrderCreateWithoutOrganizationInput[] | Prisma.OrderUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutOrganizationInput | Prisma.OrderCreateOrConnectWithoutOrganizationInput[]
+  createMany?: Prisma.OrderCreateManyOrganizationInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUpdateManyWithoutOrganizationNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutOrganizationInput, Prisma.OrderUncheckedCreateWithoutOrganizationInput> | Prisma.OrderCreateWithoutOrganizationInput[] | Prisma.OrderUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutOrganizationInput | Prisma.OrderCreateOrConnectWithoutOrganizationInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutOrganizationInput | Prisma.OrderUpsertWithWhereUniqueWithoutOrganizationInput[]
+  createMany?: Prisma.OrderCreateManyOrganizationInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutOrganizationInput | Prisma.OrderUpdateWithWhereUniqueWithoutOrganizationInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutOrganizationInput | Prisma.OrderUpdateManyWithWhereWithoutOrganizationInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type OrderUncheckedUpdateManyWithoutOrganizationNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutOrganizationInput, Prisma.OrderUncheckedCreateWithoutOrganizationInput> | Prisma.OrderCreateWithoutOrganizationInput[] | Prisma.OrderUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutOrganizationInput | Prisma.OrderCreateOrConnectWithoutOrganizationInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutOrganizationInput | Prisma.OrderUpsertWithWhereUniqueWithoutOrganizationInput[]
+  createMany?: Prisma.OrderCreateManyOrganizationInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutOrganizationInput | Prisma.OrderUpdateWithWhereUniqueWithoutOrganizationInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutOrganizationInput | Prisma.OrderUpdateManyWithWhereWithoutOrganizationInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
@@ -431,6 +507,68 @@ export type OrderUpdateOneRequiredWithoutItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutItemsInput, Prisma.OrderUpdateWithoutItemsInput>, Prisma.OrderUncheckedUpdateWithoutItemsInput>
 }
 
+export type OrderCreateWithoutOrganizationInput = {
+  id?: string
+  name?: string | null
+  table: number
+  status?: boolean
+  draft?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.ItemCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutOrganizationInput = {
+  id?: string
+  name?: string | null
+  table: number
+  status?: boolean
+  draft?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.ItemUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutOrganizationInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutOrganizationInput, Prisma.OrderUncheckedCreateWithoutOrganizationInput>
+}
+
+export type OrderCreateManyOrganizationInputEnvelope = {
+  data: Prisma.OrderCreateManyOrganizationInput | Prisma.OrderCreateManyOrganizationInput[]
+  skipDuplicates?: boolean
+}
+
+export type OrderUpsertWithWhereUniqueWithoutOrganizationInput = {
+  where: Prisma.OrderWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutOrganizationInput, Prisma.OrderUncheckedUpdateWithoutOrganizationInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutOrganizationInput, Prisma.OrderUncheckedCreateWithoutOrganizationInput>
+}
+
+export type OrderUpdateWithWhereUniqueWithoutOrganizationInput = {
+  where: Prisma.OrderWhereUniqueInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutOrganizationInput, Prisma.OrderUncheckedUpdateWithoutOrganizationInput>
+}
+
+export type OrderUpdateManyWithWhereWithoutOrganizationInput = {
+  where: Prisma.OrderScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutOrganizationInput>
+}
+
+export type OrderScalarWhereInput = {
+  AND?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+  OR?: Prisma.OrderScalarWhereInput[]
+  NOT?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+  id?: Prisma.StringFilter<"Order"> | string
+  name?: Prisma.StringNullableFilter<"Order"> | string | null
+  table?: Prisma.IntFilter<"Order"> | number
+  status?: Prisma.BoolFilter<"Order"> | boolean
+  draft?: Prisma.BoolFilter<"Order"> | boolean
+  organizationId?: Prisma.StringFilter<"Order"> | string
+  createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
+}
+
 export type OrderCreateWithoutItemsInput = {
   id?: string
   name?: string | null
@@ -439,6 +577,7 @@ export type OrderCreateWithoutItemsInput = {
   draft?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutOrdersInput
 }
 
 export type OrderUncheckedCreateWithoutItemsInput = {
@@ -447,6 +586,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   table: number
   status?: boolean
   draft?: boolean
+  organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -475,9 +615,53 @@ export type OrderUpdateWithoutItemsInput = {
   draft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutOrdersNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  table?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  draft?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OrderCreateManyOrganizationInput = {
+  id?: string
+  name?: string | null
+  table: number
+  status?: boolean
+  draft?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrderUpdateWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  table?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  draft?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.ItemUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  table?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  draft?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.ItemUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   table?: Prisma.IntFieldUpdateOperationsInput | number
@@ -524,8 +708,10 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   table?: boolean
   status?: boolean
   draft?: boolean
+  organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
@@ -536,8 +722,10 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   table?: boolean
   status?: boolean
   draft?: boolean
+  organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -546,8 +734,10 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   table?: boolean
   status?: boolean
   draft?: boolean
+  organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectScalar = {
@@ -556,21 +746,28 @@ export type OrderSelectScalar = {
   table?: boolean
   status?: boolean
   draft?: boolean
+  organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "table" | "status" | "draft" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "table" | "status" | "draft" | "organizationId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type OrderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}
+export type OrderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+}
 
 export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Order"
   objects: {
+    organization: Prisma.$OrganizationPayload<ExtArgs>
     items: Prisma.$ItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -579,6 +776,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     table: number
     status: boolean
     draft: boolean
+    organizationId: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["order"]>
@@ -975,6 +1173,7 @@ readonly fields: OrderFieldRefs;
  */
 export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Order$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1010,6 +1209,7 @@ export interface OrderFieldRefs {
   readonly table: Prisma.FieldRef<"Order", 'Int'>
   readonly status: Prisma.FieldRef<"Order", 'Boolean'>
   readonly draft: Prisma.FieldRef<"Order", 'Boolean'>
+  readonly organizationId: Prisma.FieldRef<"Order", 'String'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Order", 'DateTime'>
 }
@@ -1266,6 +1466,10 @@ export type OrderCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    */
   data: Prisma.OrderCreateManyInput | Prisma.OrderCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1336,6 +1540,10 @@ export type OrderUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many Orders to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { Box } from "lucide-react";
 import { api } from "@/app/lib/api";
 import { getAuthToken } from "@/app/lib/auth";
+import { requiredAdmin } from "@/lib/auth";
 import { ProductList } from "./ProductList";
 
 type Category = { id: string; name: string };
@@ -12,6 +13,7 @@ export default function ProductsPage() {
 }
 
 async function ProductsContent() {
+  await requiredAdmin();
   const token = await getAuthToken();
   const [productsResponse, categoriesResponse] = await Promise.all([api("/product", { token }), api("/category", { token })]);
   if (!productsResponse.ok || !categoriesResponse.ok) throw new Error("Não foi possível carregar os produtos.");

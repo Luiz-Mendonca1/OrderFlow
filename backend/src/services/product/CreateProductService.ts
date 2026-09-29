@@ -1,4 +1,5 @@
 import prismaClient from "../../prisma";
+import { getOrganizationId } from "../../prisma/tenantContext";
 import cloudinary from "../../config/cloudinary";
 
 interface CreateProductServiceProps {
@@ -12,6 +13,9 @@ interface CreateProductServiceProps {
 
 class CreateProductService {
     async execute({ name, description, price, category_id, imageBuffer, imageName }: CreateProductServiceProps) {
+        const organizationId = getOrganizationId();
+        if (!organizationId) throw new Error("Organization context is missing.");
+
         if (!category_id) {
             throw new Error('Category id is required');
         }
@@ -64,6 +68,7 @@ class CreateProductService {
                     price,
                     banner: bannerUrl,
                     categoryId: category_id,
+                    organizationId
                 },
                 select: {
                     id: true,

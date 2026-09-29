@@ -2,7 +2,8 @@ import {Router} from 'express';
 import multer from 'multer';
 import uploadConfig from './config/multer';
 import {CreateUserController} from './controllers/user/CreateUserController';
-import { authUserSchema, createUserSchema } from './schemas/userSchema';
+import { authUserSchema, createUserSchema, createStaffSchema } from './schemas/userSchema';
+import { TeamController } from './controllers/user/TeamController';
 import { validateSchema } from './middlewares/validateSchema';
 import { AuthUserController } from './controllers/user/AuthUserController';
 import { DetailUserController } from './controllers/user/DetailUserController';
@@ -42,34 +43,38 @@ router.post('/session', validateSchema(authUserSchema), (req, res) => authUserCo
 const detailUserController = new DetailUserController();
 router.get('/me', isAuthenticated, (req, res) => detailUserController.handle(req, res));
 
+const teamController = new TeamController();
+router.get('/team', isAuthenticated, isAdmin, (req, res) => teamController.list(req, res));
+router.post('/team', isAuthenticated, isAdmin, validateSchema(createStaffSchema), (req, res) => teamController.create(req, res));
+
 // rotas category
 const createCategoryController = new CreateCategoryController();
-router.post('/category', isAuthenticated, validateSchema(createCategorySchema), (req, res) => createCategoryController.handle(req, res));
+router.post('/category', isAuthenticated, isAdmin, validateSchema(createCategorySchema), (req, res) => createCategoryController.handle(req, res));
 
 const listCategoryController = new ListCategoryController();
-router.get('/category', isAuthenticated, (req, res) => listCategoryController.handle(req, res));
+router.get('/category', isAuthenticated, isAdmin, (req, res) => listCategoryController.handle(req, res));
 
 const updateCategoryController = new UpdateCategoryController();
-router.put('/category', isAuthenticated, validateSchema(updateCategorySchema), (req, res) => updateCategoryController.handle(req, res));
+router.put('/category', isAuthenticated, isAdmin, validateSchema(updateCategorySchema), (req, res) => updateCategoryController.handle(req, res));
 
 const deleteCategoryController = new DeleteCategoryController();
-router.delete('/category', isAuthenticated, validateSchema(deleteCategorySchema), (req, res) => deleteCategoryController.handle(req, res));
+router.delete('/category', isAuthenticated, isAdmin, validateSchema(deleteCategorySchema), (req, res) => deleteCategoryController.handle(req, res));
 
 // rotas product
 const createProductController = new CreateProductController();
-router.post('/product', isAuthenticated, upload.single('file'), validateSchema(createProductSchema), (req, res) => createProductController.handle(req, res));
+router.post('/product', isAuthenticated, isAdmin, upload.single('file'), validateSchema(createProductSchema), (req, res) => createProductController.handle(req, res));
 
 const updateProductController = new UpdateProductController();
-router.put('/product', isAuthenticated, upload.single('file'), validateSchema(updateProductSchema), (req, res) => updateProductController.handle(req, res));
+router.put('/product', isAuthenticated, isAdmin, upload.single('file'), validateSchema(updateProductSchema), (req, res) => updateProductController.handle(req, res));
 
 const listProductController = new ListProductController();
-router.get('/product', isAuthenticated, (req, res) => listProductController.handle(req, res));
+router.get('/product', isAuthenticated, isAdmin, (req, res) => listProductController.handle(req, res));
 
 const deleteProductController = new DeleteProductController();
-router.delete('/product', isAuthenticated, (req, res) => deleteProductController.handle(req, res));
+router.delete('/product', isAuthenticated, isAdmin, (req, res) => deleteProductController.handle(req, res));
 
 const listProductCategoryController = new ListProductCategoryController();
-router.get('/product/category', isAuthenticated, (req, res) => listProductCategoryController.handle(req, res));
+router.get('/product/category', isAuthenticated, isAdmin, (req, res) => listProductCategoryController.handle(req, res));
 
 // rotas order
 const listOrderController = new ListOrderController();
